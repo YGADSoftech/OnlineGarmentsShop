@@ -1,0 +1,37 @@
+﻿@using GarmentsOnlineShop.Models.PayPal;
+@model paypalModel
+@{
+    ViewBag.Title = "PostToPayPal";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <form id="frm" action=@ViewBag.actionURl>
+        @Html.HiddenFor(M => M.cmd)
+        @Html.HiddenFor(m=> m.business)
+        @Html.HiddenFor(m=>m.no_shipping)
+        @Html.HiddenFor(m=> m.@return)
+        @Html.HiddenFor(m=>m.cancel_return)
+        @Html.HiddenFor(m =>m.notify_url)
+        @Html.HiddenFor(m =>m.currency_code)
+        @Html.HiddenFor(m =>m.item_name)
+        @Html.HiddenFor(m =>m.amount)
+    </form>
+    <p style="text-align:center">
+        <h2>
+            Redirecting To PayPal...
+        </h2>
+    </p>
+</body>
+</html>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var frm = $("form");
+        frm.submit();
+    });
+</script>

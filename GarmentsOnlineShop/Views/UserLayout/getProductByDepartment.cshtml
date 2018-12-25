@@ -1,0 +1,73 @@
+﻿@using GarmentsOnlineShop.Models.Products
+@using EntitiesLibrary
+@model IEnumerable<ProductsModel>
+
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    ViewBag.Title = "The Gartments";
+    User currentUser = Session[WebUtil.CURRENT_USER] as User;
+
+}
+
+<div class="modal fade" id="mydialog" tabindex="-1" role="dialog" aria-labelledby="mydialog-label">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary" style="background-color:rgba(77, 68, 68, 0.84)">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" style="color:white" id="mydialog-title"></h4>
+            </div>
+            <div class="modal-body" id="mydialog-body">
+            </div>
+        </div>
+    </div>
+</div> 
+@if (Model != null)
+{
+    if (Model.ToList().Count < 1)
+    {
+        <h3 class="text-center">No Products...!!!</h3>
+    }
+    <section>
+        @foreach (var m in Model)
+        {
+            <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                <div class="container" style="margin: 15px 0px;padding:10px;text-align:center">
+                    <img src=@Url.Content(m.imageUrl) alt="product-1" class="img-responsive" style="width:inherit;height:auto" />
+                    <h5>@m.name  [<a href="#" class=" btn detail" data-Pid="@m.id">Detail</a>]</h5>
+
+                    <div style="margin-top:5px">
+                        Rs.@m.price/-
+                    </div>
+
+                    @if (currentUser != null && (currentUser.IsInRole(WebUtil.USER_ROLE)))
+                    {
+                        <div class="container">
+                            <button class="btn btn-default btn-sm AddtoCart" data-pid="@m.id"><span class="glyphicon glyphicon-shopping-cart"></span> Add to cart</button>
+                        </div>
+                    }
+
+
+                </div>
+            </div>
+        }
+
+    </section>
+}
+
+
+@section scripts{
+
+    <script type="text/javascript">
+        $(".detail").click(function (ev) {
+            ev.preventDefault();
+            var pid = $(this).attr("data-Pid");
+            $.ajax({
+                url: "/UserLayout/getProductById/" + pid
+            }).done(function (detail) {
+                $("#mydialog-title").html("Product Detail");
+                $("#mydialog-body").html(detail);
+                $("#mydialog").modal();
+            });
+        });
+    </script>
+}

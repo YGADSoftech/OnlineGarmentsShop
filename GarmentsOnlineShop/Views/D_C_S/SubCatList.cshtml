@@ -1,0 +1,15 @@
+﻿@using GarmentsOnlineShop.Models.DepartmentAndCategories
+@model IEnumerable<SubCatModel>
+@if (Model != null)
+{
+    foreach (var m in Model)
+    {
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-left">
+            <div class="container">
+                <h6 style="color:black"><a href="/UserLayout/GetProductsBySubCategary/@m.id" style="color:black">@m.name</a></h6>
+                
+            </div>
+        </div>
+    }
+}
+

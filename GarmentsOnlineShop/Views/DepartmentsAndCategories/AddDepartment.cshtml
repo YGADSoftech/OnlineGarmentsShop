@@ -1,0 +1,16 @@
+﻿@using GarmentsOnlineShop.Models.DepartmentAndCategories
+@model DepartmentsModel
+@using (Html.BeginForm("AddDepartment", "DepartmentsAndCategories", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <div class="input-group">
+            @Html.TextBoxFor(m => m.name, new { @class = "form-control", placeholder = "Department Name" })
+            
+                <label>Select Picture For Department</label>
+                <input name="pic" type="file" />
+            
+            <button type="submit" class="btn pull-right"><span class="glyphicon glyphicon-save">Save</span></button>
+        </div>
+    </div>
+}
+

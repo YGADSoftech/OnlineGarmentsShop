@@ -1,0 +1,349 @@
+﻿@using EntitiesLibrary
+@using GarmentsOnlineShop.Models
+@model IEnumerable<Orders>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Manage Orders";
+    AlertModel alert = TempData["alert"] as AlertModel;
+}
+@if (alert != null)
+{
+    @Html.Partial("~/Views/Shared/_Alert.cshtml", alert)
+}
+<div class="col-lg-12">
+    <h3><span class="glyphicon glyphicon-briefcase"></span> Order Management</h3>
+</div>
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#Pending" data-toggle="tab">Pending</a>
+    </li>
+    <li> <a href="#Sent" data-toggle="tab">Sent</a></li>
+    <li> <a href="#Cancelled" data-toggle="tab">Cancelled</a></li>
+    <li> <a href="#All" data-toggle="tab">All Previous</a></li>
+</ul>
+<div class="tab-content">
+    <div id="Pending" class="active tab-pane">
+        <table class="table table-bordered table-responsive">
+            <thead style="background-color:rgba(77, 68, 68, 0.84)">
+                <tr>
+                    <th class="col-lg-2" style="color:white">Order Id</th>
+                    <th class="col-lg-2" style="color:white">Order Date</th>
+                    <th class="col-lg-1" style="color:white">Payment Type</th>
+                    <th class="col-lg-1" style="color:white">Total amount</th>
+                    <th class="col-lg-1" style="color:white">Order State</th>
+                    <th class="col-lg-3" style="color:white">Products</th>
+                    <th class="col-lg-2" style="color:white">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var m in Model)
+                    {
+                        if (m.orderstate == "pending")
+                        {
+                            <tr>
+                                <td class="col-lg-2">@m.OrderID</td>
+                                <td class="col-lg-2">@m.OrderDate</td>
+                                <td class="col-lg-1">@m.paymentType</td>
+                                <td class="col-lg-1">$@m.TotalAmount</td>
+                                <td class="col-lg-1">@m.orderstate</td>
+                                <td class="col-lg-3">
+                                    <ul>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle d-toggle">
+                                                <span>Show Products<span class="caret"></span> </span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                @foreach (var item in m.items)
+                                                {
+                                                    <li>
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-lg-3">
+                                                                    @if (item.Products.Images.Count > 0)
+                                                                    {
+                                                                        <img src="@Url.Content(item.Products.Images.ToList()[0].Url)" alt="" class="img-responsive" style="width:50px; height:50px" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img src="/images/nophoto.png" alt="" class="img-responsive" style="width:50px; height:50px" />
+                                                                    }
+                                                                    @item.Products.Name
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    Quantity: @item.Quantity
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    Color: @item.color_name
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    Size: @item.size_Name
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                }
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td class="col-lg-2">
+                                    <div class="col-lg-6">
+                                        <a href="/OrderManagement/SendOrder/@m.Id">Send</a>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <a href="/OrderManagement/CancelOrder/@m.Id">Cancel</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div id="Sent" class="tab-pane ">
+        <table class="table table-bordered table-responsive">
+            <thead style="background-color:rgba(77, 68, 68, 0.84)">
+                <tr>
+                    <th class="col-lg-2" style="color:white">Order Id</th>
+                    <th class="col-lg-2" style="color:white">Order Date</th>
+                    <th class="col-lg-2" style="color:white">Payment Type</th>
+                    <th class="col-lg-1" style="color:white">Total amount</th>
+                    <th class="col-lg-2" style="color:white">Order State</th>
+                    <th class="col-lg-3" style="color:white">Products</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var m in Model)
+                    {
+                        if (m.orderstate == "Sent")
+                        {
+                            <tr>
+                                <td class="col-lg-2">@m.OrderID</td>
+                                <td class="col-lg-2">@m.OrderDate</td>
+                                <td class="col-lg-2">@m.paymentType</td>
+                                <td class="col-lg-1">$@m.TotalAmount</td>
+                                <td class="col-lg-2">@m.orderstate</td>
+                                <td class="col-lg-3">
+                                    <ul>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle d-toggle">
+                                                <span>Show Products<span class="caret"></span> </span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                @foreach (var item in m.items)
+                                                {
+                                                    <li>
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-lg-3">
+                                                                    @if (item.Products.Images.Count > 0)
+                                                                    {
+                                                                        <img src="@Url.Content(item.Products.Images.ToList()[0].Url)" alt="" class="img-responsive" style="width:50px; height:50px" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img src="/images/nophoto.png" alt="" class="img-responsive" style="width:50px; height:50px" />
+                                                                    }
+                                                                    @item.Products.Name
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    Quantity: @item.Quantity
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    Color: @item.color_name
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    Size: @item.size_Name
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                }
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div id="Cancelled" class="tab-pane ">
+        <table class="table table-bordered table-responsive">
+            <thead style="background-color:rgba(77, 68, 68, 0.84)">
+                <tr>
+                    <th class="col-lg-2" style="color:white">Order Id</th>
+                    <th class="col-lg-2" style="color:white">Order Date</th>
+                    <th class="col-lg-1" style="color:white">Payment Type</th>
+                    <th class="col-lg-1" style="color:white">Total amount</th>
+                    <th class="col-lg-1" style="color:white">Order State</th>
+                    <th class="col-lg-3" style="color:white">Products</th>
+                    <th class="col-lg-2" style="color:white">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var m in Model)
+                    {
+                        if (m.orderstate == "Cancelled")
+                        {
+                            <tr>
+                                <td class="col-lg-2">@m.OrderID</td>
+                                <td class="col-lg-2">@m.OrderDate</td>
+                                <td class="col-lg-1">@m.paymentType</td>
+                                <td class="col-lg-1">$@m.TotalAmount</td>
+                                <td class="col-lg-1">@m.orderstate</td>
+                                <td class="col-lg-3">
+                                    <ul>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle d-toggle">
+                                                <span>Show Products<span class="caret"></span> </span>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                @foreach (var item in m.items)
+                                                {
+                                                    <li>
+                                                        <div class="container">
+                                                            <div class="row">
+                                                                <div class="col-lg-3">
+                                                                    @if (item.Products.Images.Count > 0)
+                                                                    {
+                                                                        <img src="@Url.Content(item.Products.Images.ToList()[0].Url)" alt="" class="img-responsive" style="width:50px; height:50px" />
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <img src="/images/nophoto.png" alt="" class="img-responsive" style="width:50px; height:50px" />
+                                                                    }
+                                                                    @item.Products.Name
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    Quantity: @item.Quantity
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    Color: @item.color_name
+                                                                </div>
+                                                                <div class="col-lg-3">
+                                                                    Size: @item.size_Name
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li class="divider"></li>
+                                                }
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td class="col-lg-2">
+                                    <a href="/OrderManagement/SendOrder/@m.Id">Send</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div id="All" class="tab-pane">
+        <table class="table table-bordered table-responsive">
+            <thead style="background-color:rgba(77, 68, 68, 0.84)">
+                <tr>
+                    <th class="col-lg-2" style="color:white">Order Id</th>
+                    <th class="col-lg-2" style="color:white">Order Date</th>
+                    <th class="col-lg-2" style="color:white">Payment Type</th>
+                    <th class="col-lg-1" style="color:white">Total amount</th>
+                    <th class="col-lg-2" style="color:white">Order State</th>
+                    <th class="col-lg-3" style="color:white">Products</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var m in Model)
+                    {
+                        <tr>
+                            <td class="col-lg-2">@m.OrderID</td>
+                            <td class="col-lg-2">@m.OrderDate</td>
+                            <td class="col-lg-2">@m.paymentType</td>
+                            <td class="col-lg-1">$@m.TotalAmount</td>
+                            <td class="col-lg-2">@m.orderstate</td>
+                            <td class="col-lg-3">
+                                <ul>
+                                    <li class="dropdown">
+                                        <a href="#" class="dropdown-toggle d-toggle">
+                                            <span>Show Products<span class="caret"></span> </span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            @foreach (var item in m.items)
+                                            {
+                                                <li>
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-lg-3">
+                                                                @if (item.Products.Images.Count > 0)
+                                                                {
+                                                                    <img src="@Url.Content(item.Products.Images.ToList()[0].Url)" alt="" class="img-responsive" style="width:50px; height:50px" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img src="/images/nophoto.png" alt="" class="img-responsive" style="width:50px; height:50px" />
+                                                                }
+                                                                @item.Products.Name
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                Quantity: @item.Quantity
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                Color: @item.color_name
+                                                            </div>
+                                                            <div class="col-lg-3">
+                                                                Size: @item.size_Name
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="divider"></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    <script type="text/javascript">
+
+    $(".d-toggle").click(function (evt) {
+        evt.preventDefault();
+        $(this).next().slideToggle();
+    });
+
+
+    </script>
+
+
+
+}

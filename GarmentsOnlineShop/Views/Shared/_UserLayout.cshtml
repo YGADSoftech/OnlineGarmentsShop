@@ -1,0 +1,172 @@
+﻿@using EntitiesLibrary
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    User currentUser = Session[WebUtil.CURRENT_USER] as User;
+   
+}
+@Html.Action("Departments","UserLayout")
+
+    <div>
+        @RenderBody()
+    </div>
+
+
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+@RenderSection("scripts", required: false)
+<script type="text/javascript">
+   
+    $(".dep").click(function (evt) {
+        var div = $(this).parent().next();
+        var id = $(this).attr("data-id");
+        $.ajax({
+            url: "/UserLayout/GetCategories/" + id
+        }).done(function (c) {
+            div.html(c).slideToggle();
+            $(".CBtn").click(function () {
+                var Id = $(this).attr("data-Id");
+                var div = $(this).parent().next();
+                $.ajax({
+                       url: "/UserLayout/GetSubCategories/" + Id
+                }).done(function (S) {
+                       div.slideToggle().html(S);
+                });
+            });
+        });
+    });
+    $(".collapsed").click(function () {
+        $("#bs-example-navbar-collapse-1").slideToggle();
+    })
+    
+   
+
+
+
+
+    $(".AddtoCart").click(function (ev) {
+        ev.preventDefault();
+        var Id = $(this).attr("data-pid");
+        $.ajax({
+            url: "/UserLayout/shoppingCartPartialView/" + Id
+        }).done(function (data) {
+            $("#mydialog-title").html("Cart");
+            $("#mydialog-body").html(data);
+            $("#mydialog").modal();
+            $("#ContinueShopping").click(function (ev) {
+                ev.preventDefault();
+                location.reload();
+            });
+            $(".sz").change(function () {
+                var id = $(this).val();
+                var index = $(this).attr("data-indx");
+                $.ajax({
+                    url: "/UserLayout/UpdateSize",
+                    dataType: 'json',
+                    data: { size: id, index: index },
+                });
+            });
+            $(".clr").change(function () {
+                var id = $(this).val();
+                var index = $(this).attr("data-Indx");
+                $.ajax({
+                    url: "/UserLayout/UpdateColor",
+                    dataType: 'json',
+                    data: { Color: id, index: index },
+                });
+            });
+            $(".qnty").change(function () {
+                var q = $(this).val();
+                var P = $(this).attr("data-price");
+                var s = P * q;
+                $(this).parent().next().html(s);
+                var index = $(this).attr("data-index");
+                //var object = { "quantity": q, "index": index };
+                //var indexNquantity = q + "," + index
+                //alert(indexNquantity)
+                $.ajax({
+
+                    url: "/UserLayout/UpdateQuantity",
+                    dataType: 'json',
+                    data: { quantity: q, index: index },
+
+                }).done(function () {
+                    $("#total").html().reload();
+                });
+            });
+            $(".remove").click(function (ev) {
+                ev.preventDefault();
+                var id = $(this).attr("data-pid");
+                $.ajax({
+                    url: "/UserLayout/DeleteItemFromCart/" + id
+                }).done(function () {
+                    location.reload();
+                });
+            });
+        });
+    });
+    $("#cart").click(function (ev) {
+        ev.preventDefault();
+        var Id = $(this).attr("data-pid");
+        $.ajax({
+            url: "/UserLayout/MyCart"
+        }).done(function (data) {
+            $("#mydialog-title").html("Cart");
+            $("#mydialog-body").html(data);
+            $("#mydialog").modal();
+            $("#ContinueShopping").click(function (ev) {
+                ev.preventDefault();
+                location.reload();
+            });
+            $(".sz").change(function () {
+                var id = $(this).val();
+                var index = $(this).attr("data-indx");
+                $.ajax({
+                    url: "/UserLayout/UpdateSize",
+                    dataType: 'json',
+                    data: { size: id, index: index },
+                });
+            });
+            $(".clr").change(function () {
+                var id = $(this).val();
+                var index = $(this).attr("data-Indx");
+                $.ajax({
+                    url: "/UserLayout/UpdateColor",
+                    dataType: 'json',
+                    data: { Color: id, index: index },
+                });
+            });
+            $(".qnty").change(function () {
+                var q = $(this).val();
+                var P = $(this).attr("data-price");
+                var s = P * q;
+                $(this).parent().next().html(s);
+                var index = $(this).attr("data-index");
+                
+                $.ajax({
+
+                    url: "/UserLayout/UpdateQuantity",
+                    dataType: 'json',
+                    data: { quantity: q, index: index },
+
+                }).done(function () {
+                    $("#total").html().reload();
+                });
+            });
+            $(".remove").click(function (ev) {
+                ev.preventDefault();
+                var id = $(this).attr("data-pid");
+                $.ajax({
+                    url: "/UserLayout/DeleteItemFromCart/" + id
+                }).done(function () {
+                    location.reload();
+                });
+            });
+        });
+    });
+    
+    
+    
+   
+</script>

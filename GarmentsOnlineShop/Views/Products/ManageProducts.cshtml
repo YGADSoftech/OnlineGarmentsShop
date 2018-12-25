@@ -1,0 +1,129 @@
+﻿@using GarmentsOnlineShop.Models.Products
+@using GarmentsOnlineShop.Models
+@model IEnumerable<ProductsModel>
+@{
+    ViewBag.Title = "Products Management";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    AlertModel alert = TempData["alert"] as AlertModel;
+}
+
+<div class="modal fade" id="mydialog" tabindex="-1" role="dialog" aria-labelledby="mydialog-label">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary" style="background-color:rgba(77, 68, 68, 0.84)">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" style="color:white" id="mydialog-title"></h4>
+            </div>
+            <div class="modal-body" id="mydialog-body">
+            </div>
+        </div>
+    </div>
+</div>  
+@if (alert != null)
+{
+    @Html.Partial("~/Views/Shared/_Alert.cshtml", alert)
+}
+
+
+    <div class="col-lg-12">
+        <h3><span class="glyphicon glyphicon-tags"></span> Products Management<a id="add" class="btn" href="/Products/ManageProducts">Add new product</a></h3>
+    </div>
+<table class="table table-bordered table-responsive">
+    <thead style="background-color:rgba(77, 68, 68, 0.84)">
+        <tr>
+            <th class="col-lg-2" style="color:white">Image</th>
+            <th class="col-lg-4" style="color:white">Name</th>
+            <th class="col-lg-3" style="color:white">price</th>
+            <th class="col-lg-3" style="color:white">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var m in Model)
+            {
+                <tr>
+                    <td class="col-lg-2">
+                        @if (!string.IsNullOrEmpty(m.imageUrl))
+                            {
+                            <img src="@Url.Content(m.imageUrl)" alt="@m.id" class="img-responsive" style="width:50px; height:50px" />
+                            }
+                           
+                        
+                    </td>
+                    <td class="col-lg-4">
+                        <h4>@m.name</h4>
+                    </td>
+                    <td class="col-lg-3">
+                        <h4>@m.price</h4>
+                    </td>
+                    <td class="col-lg-3">
+                        <span class="col-lg-4">
+                            <a href="/DepartmentsAndCategories/DelDep" class="btn del" data-id=@m.id><span class="glyphicon glyphicon-trash" style="color:black"></span></a>
+                        </span>
+                        
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@section scripts{
+<script type="text/javascript">
+        $("#add").click(function (ev) {
+            ev.preventDefault();
+            $.ajax({
+                url: "/Products/AddProduct"
+            }).done(function (createform) {
+                $("#mydialog-title").html("Add Product");
+                $("#mydialog-body").html(createform);
+                $("#mydialog").modal();
+                $("#Department").change(function () {
+                    var DepId = $(this).val();
+                    $.ajax({
+                        url: "/Products/GetCategoriesListByDepId/" + DepId
+                    }).done(function (c) {
+                        $("#categorydiv").html(c);
+                        $("#CList").change(function () {
+                            var catID = $(this).val();
+                            $.ajax({
+                                url: "/Products/GetSubCategoriesListByDepId/" + catID
+                            }).done(function (s) {
+                                $("#subcategorydiv").html(s);
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
+        $(".del").click(function (evt) {
+            evt.preventDefault();
+            var id = $(this).attr("data-id");
+                $("#mydialog-title").html("Delete product");
+                $("#mydialog-body").html("<h4>Do you really want to delete this Produc ?</h4>");
+                $("#mydialog-body").append(" <button id='yes' type='submit' class='btn pull- right'>Yes</button>");
+                $("#mydialog-body").append(" <button id ='cencel'type='reset' class='btn pull- right'>No</button>");
+                $("#mydialog").modal();
+                $("#yes").click(function () {
+
+                    $.ajax({
+                        url: "/Products/DelProduct/" + id,
+                        type: "post",
+                        success: function (data) {
+                            window.location.href = data;
+                        }
+                    });
+                });
+                $("#cencel").click(function () {
+                    location.reload();
+                });
+            });
+
+
+
+</script>
+
+}
+

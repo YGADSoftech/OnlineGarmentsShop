@@ -1,0 +1,17 @@
+﻿
+@using GarmentsOnlineShop.Models.DepartmentAndCategories
+@model SubCatModel
+@using (Html.BeginForm("AddSubCategory", "DepartmentsAndCategories", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <div class="input-group">
+            @Html.DropDownList("categories", (IEnumerable<SelectListItem>)ViewBag.CategoryList, "Select Category", new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.name, new { @class = "form-control", placeholder = "Sub Category Name" })
+            <div class="container">
+                <label>Select Picture For SubCategory</label>
+                <input name="pic" type="file" />
+            </div>
+            <button type="submit" class="btn pull-right"><span class="glyphicon glyphicon-save">Save</span></button>
+        </div>
+    </div>
+}

@@ -1,0 +1,274 @@
+﻿@using GarmentsOnlineShop.Models
+@using EntitiesLibrary.AddressFolder
+@model IEnumerable<Country>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewBag.Title = "Countries";
+    AlertModel alert = TempData["alert"] as AlertModel;
+}
+
+@if (alert != null)
+{
+   @Html.Partial("~/Views/Shared/_Alert.cshtml", alert)
+}  
+    <div class="container">
+        <form action="EditCountries" method="post">
+            <div class="modal fade" id="mydialog" tabindex="-1" role="dialog" aria-labelledby="mydialog-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary" style="background-color:rgba(77, 68, 68, 0.84)">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:white"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" style="color:white" id="mydialog-title">title here</h4>
+                        </div>
+                        <div id="model" class="modal-body">
+                            body here
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form action="EditProvinces" method="post">
+            <div class="modal fade" id="mydialog-p" tabindex="-1" role="dialog" aria-labelledby="mydialog-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary" style="background-color:rgba(77, 68, 68, 0.84)">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:white"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" style="color:white" id="mydialog-title-p">title here</h4>
+                        </div>
+                        <div id="model-p" class="modal-body">
+                            body here
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form action="EditCity" method="post">
+            <div class="modal fade" id="mydialog-c" tabindex="-1" role="dialog" aria-labelledby="mydialog-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary" style="background-color:rgba(77, 68, 68, 0.84)">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:white"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" style="color:white" id="mydialog-title-c">title here</h4>
+                        </div>
+                        <div id="model-c" class="modal-body">
+                            body here
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+       
+        <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div>
+                    <h3><span class="glyphicon glyphicon-tags"></span> Countries</h3>
+                </div>
+                <a id="addnewCountry" class="txtbox" href="">  Add New  </a>
+
+                <div id="formC"></div>
+                @if (Model != null)
+            {
+                int counter = 0;
+                foreach (var m in Model)
+                {
+                    counter++;
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                    <h3>@counter</h3>
+                                </div>
+                                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+                                    <a href="/AddLocation/Provinces/" class="shwprovince" data-dpid=@m.Id><h3 style="color:#000000">@m.Name </h3></a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                    <button type="submit" data-xid=@m.Id data-name=@m.Name data-code=@m.Code class="btn btn-default edit">Edit</button>
+                                    <a href="/AddLocation/DelCountry/@m.Id" class="btn btn-default">Delete</a>
+                                    
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    }
+                }
+
+            </div>
+            <div  class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div>
+                    <h3><span class="glyphicon glyphicon-tags"></span> Provinces</h3>
+                </div>
+                <div id="provinces">
+
+                </div>
+            </div>
+            <div  class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div>
+                    <h3><span class="glyphicon glyphicon-tags"></span> Cities</h3>
+                </div>
+                <div id="Ct">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @section scripts{
+        <script type="text/javascript">
+
+
+            $("#addnewCountry").click(function (evt) {
+                evt.preventDefault();
+                var Country = "<form action='Countries' method='post'>"
+                Country += "<input name='name'type='text' class='form-control' placeholder='Enter Country Name' />";
+                Country += "<input name='code'type='number' class='form-control' placeholder='Enter Country Code'/>";
+                Country += "<button id='updatebutton' type='submit' class='btn btn-default'><span class='glyphicon glyphicon-save'></span></button>";
+                Country += "<button id='cancelbutton' type='reset' class='btn btn-default' ><span class='glyphicon glyphicon-eject'></span></button>";
+                Country += "</form>";
+                $("#formC").html(Country);
+                $("#cancelbutton").click(function () {
+                    $("#formC").hide();
+                    $("#addnewCountry").click(function () {
+                        $("#formC").show();
+                    });
+                });
+            });
+
+            $(".edit").click(function (x) {
+                var id = $(this).data("xid");
+                var name = $(this).data("name");
+                var code = $(this).data("code");
+                $.ajax({
+                    url: "/AddLocation/Form1"
+                }).done(function (a) {
+                    $("#model").html(a);
+                    $("#mydialog-title").html("Edit selected Country's Name and Code");
+
+                    $("#mydialog").modal();
+                    $("#I").val(id);
+                    $("#N").val(name);
+                    $("#C").val(code);
+                    });
+            });
+
+
+
+
+
+            $(".shwprovince").click(function (evt) {
+                evt.preventDefault();
+                var id = $(this).data("dpid");
+                $.ajax({
+                    url: "/AddLocation/Provinces/" + id
+                }).done(function (pr) {
+                    $("#provinces").html(pr);
+                    $(".editProvince").click(function () {
+                        var Pid = $(this).attr("data-Dpid");
+                        var Pname = $(this).attr("data-Dpname");
+                        $.ajax({
+                            url: "/AddLocation/Form2"
+                        }).done(function (a) {
+                            $("#model-p").html(a);
+
+                            $("#mydialog-title-p").html("Edit selected Province's Name");
+                            $("#mydialog-p").modal();
+                            $("#IP").val(Pid);
+                            $("#NP").val(Pname);
+                        });
+                    });
+
+                    $("#addnewProvince").click(function (ev) {
+                        ev.preventDefault();
+                        $.ajax({
+                            url: "/AddLocation/Form"
+                        }).done(function (fm) {
+                            $("#formP").html("<input name='id' type='hidden' value='" + id + "'/>");
+                            $("#formP").append(fm);
+                            $("#cancelbtn").click(function () {
+                                $("#formP").hide();
+                                $("#addnewProvince").click(function () {
+                                    $("#formP").show();
+                                });
+                            });
+                        });
+                    });
+                    $(".shwCities").click(function (evt) {
+                        evt.preventDefault();
+                        var did = $(this).data("depid");
+                        $.ajax({
+                            url: "/AddLocation/Cities/" + did
+                        }).done(function (pr) {
+                            $("#Ct").html(pr);
+                            $(".editCity").click(function () {
+                                var cid = $(this).attr("data-idC");
+                                var cname = $(this).attr("data-nameC");
+                                $.ajax({
+                                    url: "/AddLocation/Form2"
+                                }).done(function (a) {
+                                    $("#model-c").html(a);
+
+                                    $("#mydialog-title-c").html("Edit selected City's Name");
+                                    $("#mydialog-c").modal();
+                                    $("#IP").val(cid);
+                                    $("#NP").val(cname);
+                                });
+                            });
+
+                            $("#addnewCity").click(function (ev) {
+                                ev.preventDefault();
+                                $.ajax({
+                                    url: "/AddLocation/Form"
+                                }).done(function (fm) {
+                                    $("#formCIty").html("<input name='id' type='hidden' value='" + did + "'/>");
+                                    $("#formCIty").append(fm);
+                                    $("#cancelbtn").click(function () {
+                                        $("#formCIty").hide();
+                                        $("#addnewCity").click(function () {
+                                            $("#formCIty").show();
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+
+
+                });
+            });
+
+
+
+
+
+
+
+
+
+            //var P = "<form action='Provinces' method='post'>";
+            //p += "<input name='name'type='text' class='form-control' placeholder='Enter Name' />";
+            //p += "<input name='id'type='hidden' value=" + id + "/>";
+            //p += "<button id='updatebutton' type='submit' class='btn btn-primary' ><span class='glyphicon glyphicon-save'></span></button>";
+            //p += "<button id='cancelbtn' type='reset' class='btn btn-default'><span class='glyphicon glyphicon-eject'></span></button>";
+            //p += "</form>";
+            //$("#formP").html(p);
+            //$("$cancelbtn").click(function () {
+            //    location.reload();
+            //});
+
+
+
+
+
+        </script>
+
+
+    }
+

@@ -1,0 +1,70 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+<div class="container" style="margin-top:10px">
+    @using (Html.BeginForm("VerifyDetail", "UserLayout", FormMethod.Post))
+    {
+        <div class=container>
+            
+             <h4>
+                  Note:
+             </h4>
+             <p>Order will be delivered on your defaulf Address. If you want this order to be delivered on any other address, please check the box below and write full address in the textbox below</p>
+            <div class="row">
+                <div class="col-lg-12">
+                    @Html.CheckBox("userAdrs", new { id = "checkbox" })<label> Don't user default address</label>
+                </div>
+            </div>
+            <div class="row">
+               <div class="col-lg-12">
+                   @Html.TextBox("streetAddress", null, new { @class = "form-control", id = "addressbox"})
+               </div>
+           </div>
+           
+            <h4>
+                Payment Method
+            </h4>
+            <div class="container">
+                <div class="row">
+                    <lable>@Html.RadioButton("PaymentMethod", "OnDelivery") Payment on delivery</lable>
+                </div>
+                <div class="row">
+                    <lable>@Html.RadioButton("PaymentMethod", "Paypal") Payment with PayPal</lable>
+                </div>
+                <label style="color:red" id="errorLabel"></label>
+            </div>
+            <button id="btn" type="submit"style="margin-top:10px" class="btn btn-default">Done</button>
+        </div>
+    }
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#addressbox").attr("disabled", "disabled");
+            var ckbox = $('#checkbox');
+
+            $('input').on('click', function () {
+                if (ckbox.is(':checked'))
+                {
+                    $("#addressbox").removeAttr("disabled");
+                }
+                else
+                {
+                    $("#addressbox").attr("disabled", "disabled");
+                }
+            });
+        });
+        $("#btn").click(function (evt) {
+            if (!$('input[name=PaymentMethod]:checked').val())
+            {
+                evt.preventDefault();
+                $("#errorLabel").html("Please check payment method!")
+            }
+
+        });
+        
+
+    </script>
+    }

@@ -1,0 +1,96 @@
+﻿@using EntitiesLibrary
+
+@{
+    User user = Session[WebUtil.CURRENT_USER] as User;
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    @RenderSection("myStyle", false)
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body >
+
+
+    <nav class="navbar navbar-fixed-top" style="background-color:rgba(77, 68, 68, 0.84)">
+        <div class="">
+            <div class="navbar-default">
+               
+                @Html.ActionLink("The Garments", "UserViewPage", "UserLayout", new { area = "abc" }, new { @class = "navbar-brand", style = "color:white;margin-left:15px" })
+            </div>
+            @if (user != null)
+            {
+            <ul class="nav navbar-nav pull-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="dropdown-toggle">
+                        @if (string.IsNullOrWhiteSpace(user.ImageUrl))
+                        {
+                            <img src="@Url.Content("~/images/others/user.png")" class="img-circle" style="width:25px;height:25px;" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content(user.ImageUrl)" class="img-circle" style="width:25px;height:25px;" />
+                        }
+
+                        <span style="color:white">@user.FirstName @user.LastName<span class="caret"></span> </span>
+                    </a>
+                    <ul class="dropdown-menu " id="dm" >
+                        <li style="padding:15px;text-align:center">
+                            @if (string.IsNullOrWhiteSpace(user.ImageUrl))
+                            {
+                                <img src="@Url.Content("~/images/others/user.png")" style="width:100px;height:100px;" />
+                            }
+                            else
+                            {
+                                <img src = "@Url.Content(user.ImageUrl)"  style = "width:100px;height:100px;" />
+                            }
+                            
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="/user/AccountSetting"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                        <li><a href="/user/ChangePassword"><span class="glyphicon glyphicon-asterisk"></span> Change Password</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/User/logout"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+                    </ul>
+                </li>
+            </ul>
+                
+            }
+            else
+            {
+                <a href="/User/Login_Register" class="pull-right" style="color:white; margin-top:15px; margin-right:15px; margin-bottom:10px">Register/Login</a>
+            }
+        </div>
+    </nav>
+    
+
+
+
+        <div class="col-lg-12">
+            @RenderBody()
+        </div>
+
+       
+
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $("#dropdown-toggle").click(function () {
+            $("#dm").slideToggle();
+           
+        });
+        
+
+    </script>
+</body>
+</html>

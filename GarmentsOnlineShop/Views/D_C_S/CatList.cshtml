@@ -1,0 +1,39 @@
+﻿@using GarmentsOnlineShop.Models.DepartmentAndCategories
+@model IEnumerable<CatergoryModel>
+@if (Model != null)
+{
+    foreach (var m in Model)
+    {
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-left">
+            <div class="forHideCategories">
+                <h6 style="color:black"><span class="btn glyphicon glyphicon-chevron-down CBtn" data-Id="@m.id"></span>
+                <a href="/UserLayout/GetProductByCategary/@m.id" style="color:black">@m.name</a>
+                </h6>
+                <div class="container">
+
+                </div>
+                <div style="border-bottom:dotted 1px"></div>
+            </div>
+        </div>
+    }
+}
+@*@if (Model != null)
+{
+    int counterC = 0;
+    string ab = "SubCategory";
+    foreach (var m in Model)
+    {
+        counterC++;
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pull-left">
+            <div class="forHideCategories">
+                <h5 style="color:white">
+                    <span class="btn glyphicon glyphicon-plus-sign CBtn" data-Id="@m.id" data-Counter="@counterC"></span>
+                    <a href="/UserLayout/GetProductByCategary/@m.id" style="color:white">@m.name</a>
+                </h5>
+                <div id="@ab@counterC" class="container">
+
+                </div>
+            </div>
+        </div>
+    }
+}*@

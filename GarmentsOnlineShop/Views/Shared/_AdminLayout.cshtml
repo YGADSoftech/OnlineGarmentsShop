@@ -1,0 +1,75 @@
+﻿@using EntitiesLibrary
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+    User currentUser = Session[WebUtil.CURRENT_USER] as User;
+}
+
+
+<div class="nav" style="margin-bottom:20px">
+
+    <div class="btn-group">
+        <button type="button" id="AdminMenu" style="width:auto;height:auto; margin-top:20px" class="btn btn-default dropdown-toggle" >
+            Admin's Menu
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="/ordermanagement/manageorders">Manage Orders</a>
+            </li>
+                <li role="separator" class="divider"></li>
+            <li>
+                <a href="/Products/ManageProducts">Manage Products</a>
+            </li>
+                <li role="separator" class="divider"></li>
+            <li>
+                <a href="/DepartmentsAndCategories/ManageDepartments">Manage Departments & Categories</a>
+            </li>
+                <li role="separator" class="divider"></li>
+            <li>
+                <a href="/Products/AddColors">Add Colors</a>
+            </li>
+                <li role="separator" class="divider"></li>
+            <li>
+                <a href="/Products/AddFabrics">Add Fabrics</a>
+            </li>
+                <li role="separator" class="divider"></li>
+            <li>
+                <a href="/Products/AddSizes">Add Size</a>
+            </li>
+                <li role="separator" class="divider"></li>
+             <li>
+                 <a href="/AddLocation/Countries">Manage Countries/States/Cities</a>
+            </li>
+            @if (currentUser != null && currentUser.IsInRole(WebUtil.Super_ADMIN_ROLE))
+            {
+                <li role="separator" class="divider"></li>
+                <li>
+                    <a href="/UserManagement/ManageUsers">Manage Users</a>
+                </li>
+            }
+               
+        </ul>
+    </div>
+</div>
+
+
+<div class="">
+    <div>
+        @RenderBody()
+    </div>
+</div>
+
+
+
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+@RenderSection("scripts", required: false)
+<script type="text/javascript">
+    $("#AdminMenu").click(function (evt) {
+        evt.preventDefault();
+        $(this).next().slideToggle();
+    });
+
+
+</script>

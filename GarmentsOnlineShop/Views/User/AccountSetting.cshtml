@@ -1,0 +1,114 @@
+﻿@using GarmentsOnlineShop.Models
+@using EntitiesLibrary
+@using EntitiesLibrary.AddressFolder
+@{
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    User currentUser = Session[WebUtil.CURRENT_USER] as User;
+    ViewBag.Title = "AccountSetting";
+    AlertModel alert = TempData["failed"] as AlertModel;
+
+}
+@if (alert != null)
+{
+    @Html.Partial("~/Views/Shared/_Alert.cshtml", alert)
+}
+<div class="container" style="margin-top:25px; margin-left:35%; margin-right:35%; border:1px solid" >
+    
+    <div class="" style="background-color:rgba(77, 68, 68, 0.84)">
+        <h3 style="color:white; padding:5px">
+            <span class=" glyphicon glyphicon-user"></span> Update your info
+        </h3>
+    </div>
+    <div class="form-group">
+        @using (Html.BeginForm("AccountSetting", "User", FormMethod.Post, new { enctype = "multipart/form_data" }))
+        {
+            <div class="container">
+                <h4>First name</h4>
+                @Html.TextBox("FirstName", currentUser.FirstName , new { @class = "form-control center-block" })
+            </div>
+            <div class="container">
+                <h4>Last name</h4>
+                @Html.TextBox("LastName", currentUser.LastName, new { @class = "form-control center-block" })
+            </div>
+            <div class="container">
+                <h4>Contact number</h4>
+                @Html.TextBox("ContactNumber", currentUser.ContactNumber, new { @class = "form-control center-block" })
+            </div>
+            
+            <div class="container">
+                <h4>Address</h4>
+                @Html.TextBox("StreetAddress", currentUser.Address.StreetAddress, new { @class = "form-control center-block" })
+            </div>
+            <span style="margin-bottom:10px"></span>
+            <div class="container">
+                <select class="form-control" , name="country" id="cntry">
+                    <option value="@currentUser.Address.City.Province.Country.Id">@currentUser.Address.City.Province.Country.Name</option>
+                    @foreach (var c in (IEnumerable<Country>)ViewBag.Countries)
+                    {
+                        <option value="@c.Id">@c.Name</option>
+                    }
+                </select>
+                <span style="margin-bottom:10px"></span>
+                <div id="provinces">
+                    <select name="province" id="prov" class="form-control">
+                        <option value="@currentUser.Address.City.Province.Id">@currentUser.Address.City.Province.Name</option>
+                        @foreach (var p in (IEnumerable<Province>)ViewBag.Provinces)
+                        {
+                            <option value="@p.Id">@p.Name</option>
+                        }
+                    </select>
+                </div>
+                <span style="margin-bottom:10px"></span>
+                <div id="cities">
+                    <select name="CityList" id="" class="form-control">
+                        <option value="@currentUser.Address.City.Id">@currentUser.Address.City.Name</option>
+                        @foreach (var c in (IEnumerable<City>)ViewBag.Cities)
+                        {
+                            <option value="@c.Id">@c.Name</option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-default form-inline" style="background-color:rgba(77, 68, 68, 0.84); color:white; margin-top:10px">Update</button>
+
+            </div>
+            
+        }
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+
+        $("#cntry").change(function () {
+         var countryId = $(this).val();
+
+         $.ajax({
+             url: "/user/SendProvincesToDropDown/" + countryId
+         }).done(function (p) {
+             $("#provinces").html(p);
+             $("#PList").change(function () {
+                 var provinceId = $(this).val();
+                 alert(provinceId);
+                 $.ajax({
+                     url: "/user/SendCitiesToDropDown/" + provinceId
+                 }).done(function (p) {
+                     $("#cities").html(p);
+                 });
+             });
+
+         });
+        });
+
+        $("#prov").change(function () {
+            var provinceId = $(this).val();
+
+            $.ajax({
+                url: "/user/SendCitiesToDropDown/" + provinceId
+            }).done(function (p) {
+                $("#cities").html(p);
+            });
+        });
+
+
+    </script>
+}

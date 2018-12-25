@@ -1,0 +1,154 @@
+﻿@using EntitiesLibrary
+@using GarmentsOnlineShop.Models
+@model IEnumerable<User>
+@{
+    ViewBag.Title = "Manage Users";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    AlertModel alert = TempData["alert"] as AlertModel;
+}
+
+<div class="modal fade" id="mydialog" tabindex="-1" role="dialog" aria-labelledby="mydialog-label">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary" style="background-color:rgba(77, 68, 68, 0.84)">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" style="color:white" id="mydialog-title"></h4>
+            </div>
+            <div class="modal-body" id="mydialog-body">
+            </div>
+        </div>
+    </div>
+</div>
+@if (alert != null)
+{
+    @Html.Partial("~/Views/Shared/_Alert.cshtml", alert)
+}
+
+<div class="col-lg-12">
+     <h3><span class="glyphicon glyphicon-user"></span> User Management</h3>
+</div>
+<table class="table table-bordered table-responsive">
+    <thead style="background-color:rgba(77, 68, 68, 0.84)">
+        <tr>
+            <th class="col-lg-2" style="color:white">Image</th>
+            <th class="col-lg-6" style="color:white">Name</th>
+            <th class="col-lg-2" style="color:white">Athority</th>
+            <th class="col-lg-2" style="color:white">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var m in Model)
+            {
+                <tr>
+                    <td class="col-lg-2">
+
+                        @{
+                            if (!string.IsNullOrEmpty(m.ImageUrl))
+                            {
+                                <img src="@Url.Content(m.ImageUrl)" alt="" class="img-responsive" style="width:50px; height:50px" />
+                            }
+                            else
+                            {
+                                <img src="~/images/others/user.png" alt="" class="img - responsive" style="width: 50px; height: 50px" />
+                            }
+                        }
+                    </td>
+                    <td class="col-lg-6">
+                        <h4>@m.FirstName @m.LastName</h4>(@m.Email)
+                    </td>
+                    <td class="col-lg-2">
+                        @{
+                            if (m.Role.Name == "User")
+                            {
+                                <h4>Client</h4>
+                            }
+                            else if(m.Role.Name == "Admin")
+                            {
+                                <h4>Admin</h4>
+                            }
+                            else
+                            {
+                                <h4>Super Admin</h4>
+                            }
+                        }
+                    </td>
+                    <td class="col-lg-2">
+                        @{
+                            if (m.Role.Name == "User")
+                            {
+                                <a href="/UserManagement/MakeAdmin" class="btn MakeAdmin" data-name="@m.FirstName" data-last="@m.LastName" data-id="@m.Id"><h4>Make him Admin</h4></a>
+                            }
+                            else if (m.Role.Name == "Admin")
+                            {
+                                <a href="/UserManagement/RemoveAdmin/" class="btn Remove" data-name="@m.FirstName" data-last="@m.LastName" data-id="@m.Id"><h4>Remove from adminship</h4></a>
+                            }
+                            else
+                            {
+                                <h5>(Can't change Super Admin's athority)</h5>
+                            }
+                        }
+                    </td>
+                </tr>
+                                }
+                            }
+    </tbody>
+</table>
+
+@section scripts{
+    <script type="text/javascript">
+       
+        $(".MakeAdmin").click(function (evt) {
+            evt.preventDefault();
+            var id = $(this).attr("data-id");
+            var name = $(this).attr("data-name");
+            var lastname = $(this).attr("data-last");
+            $("#mydialog-title").html("Make Admin");
+            $("#mydialog-body").html("<h4>Do you really want to give admin's athority to " + name + " " + lastname+" ?</h4 > ");
+                $("#mydialog-body").append(" <button id='yes' type='reset' class='btn pull- right'>Yes</button>");
+                $("#mydialog-body").append(" <button id ='cencel'type='reset' class='btn pull- right'>No</button>");
+                $("#mydialog").modal();
+                $("#yes").click(function () {
+                    $.ajax({
+                        url: "/UserManagement/MakeAdmin/" + id
+                       
+                    }).done(function () {
+                        location.reload();
+                    });
+                });
+            
+                $("#cencel").click(function () {
+                    location.reload();
+                });
+            });
+
+        $(".Remove").click(function (evt) {
+            evt.preventDefault();
+            var id = $(this).attr("data-id");
+            var name = $(this).attr("data-name");
+            var lastname = $(this).attr("data-last");
+            $("#mydialog-title").html("Make Admin");
+            $("#mydialog-body").html("<h4>Do you really want to remove " + name + " " + lastname + " from adminship ?</h4 > ");
+            $("#mydialog-body").append(" <button id='yes' type='submit' class='btn pull- right'>Yes</button>");
+            $("#mydialog-body").append(" <button id ='cencel'type='reset' class='btn pull- right'>No</button>");
+            $("#mydialog").modal();
+            $("#yes").click(function () {
+                $.ajax({
+                    url: "/UserManagement/RemoveAdmin/" + id
+                }).done(function () {
+                    location.reload();
+                });
+               
+            });
+            $("#cencel").click(function () {
+                location.reload();
+            });
+        });
+
+
+    </script>
+
+
+}

@@ -1,0 +1,261 @@
+﻿@using GarmentsOnlineShop.Models
+@model GarmentsOnlineShop.Models.User.LoginModel
+@{
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+
+    ViewBag.Title = "Login/Register";
+    AlertModel alert = TempData["alert"] as AlertModel;
+    AlertModel LoginFailed = TempData["alertLoginFailed"] as AlertModel;
+}
+@section myStyle{ 
+}
+
+<div class="container">
+    <div id="info" class="alert alert-dismissable alert-info">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong>Info..!</strong> Your password will be sent to your email account..! please check your inbox and login..!
+    </div>
+    
+    <div class="row">
+
+   
+            <div class="col-md-5 col-sm-12 col-xs-12">
+                <div class="container">
+                <div style="background-color:rgba(77, 68, 68, 0.84)"><h3 style="color:white; padding:5px"><span class=" glyphicon glyphicon-user"></span> Login Here</h3></div>
+                    <div class=" col-md-12 form-group">
+                        @if (LoginFailed != null)
+                        {
+                            @Html.Partial("~/Views/Shared/_Alert.cshtml", LoginFailed)
+                        }
+                        @using (@Html.BeginForm("Login", "User", FormMethod.Post, new { enctype = "multipart/form_data", rurl = ViewBag.ReturnUrl }))
+                        {
+                            <div class="row"></div>
+                                <h4>User Name</h4>
+                           
+                                <div>
+                                    @Html.TextBoxFor(m=>m.LoginId , new { @class = "form-control center-block",id="loginID", placeholder = "Login ID Here" })
+                                </div>
+                                <h4>Password</h4>
+                                <div>
+                                    @Html.TextBoxFor(m=>m.Password, new { type = "password", @class = "form-control center-block", placeholder = "Password Here" })
+                                </div>
+                                <div class="checkbox">
+                                    @Html.CheckBoxFor(m => m.RememberMe) Remember Me    
+                                </div>
+                                <a href="#" id="forgetPass" >Forget Password</a>
+                                <label id="lbl" style="color:red"></label>
+                                <button type="submit" class="btn btn-default form-inline pull-right" style="background-color:rgba(77, 68, 68, 0.84); color:white; margin-top:10px"><span class="glyphicon glyphicon glyphicon-log-in"></span> Login</button>
+                           
+                        }
+                    </div>
+                </div>
+            </div>
+        
+        
+
+        
+        
+        <div class="col-md-7 col-sm-12 col-xs-12">
+            <div class="container">
+                <div class="" style="background-color:rgba(77, 68, 68, 0.84)"><h3 style="color:white; padding:5px"><span class=" glyphicon glyphicon-user"></span> Register Here</h3></div>
+                <div class="col-md-12 form-group">
+                    @if (alert != null)
+                    {
+                        @Html.Partial("~/Views/Shared/_Alert.cshtml", alert)
+                    }
+                    @using (@Html.BeginForm("Login_Register", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <h4>First Name</h4>
+                                <div>
+                                    @Html.TextBox("first", null, new { @class = "form-control center-block", placeholder = "Please Enter your First Name", id="1st" })
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <h4>Last Name</h4>
+                                <div>
+                                    @Html.TextBox("last", null, new { @class = "form-control center-block", placeholder = "Please Enter Your Last Name", id = "7th" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4>Street Address</h4>
+                        <div>
+                        @Html.TextBox("strtadrs", null, new { @class = "form-control center-block", placeholder = "Please Enter Your Street Address", id = "8th" })
+                            </div>
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div id="DivForCountries">
+                                @Html.DropDownList("Country", (IEnumerable<SelectListItem>)ViewBag.Countries, "Select Country", new { @class = "form-control", id = "Cnlist" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div id="DivForProvinces">
+
+                            </div>
+                           
+                        </div>
+                        <div class="col-lg-4">
+                            <div id="DivForCities">
+
+                            </div>
+                        </div>
+                    </div>
+                     
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <h4>Date of Birth</h4>
+                                <div>
+                                   @Html.TextBox("dob", null, new { @class = "form-control center-block", placeholder = "Select Your Date of Birth", type = "date", id = "6th" })
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <h4>Contact</h4>
+                                <div>
+                                    @Html.TextBox("Contact", null, new { @class = "form-control center-block", placeholder = "Enter Your Contact Number", id = "9th" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <h4>Email Id</h4>
+                                <div>
+                                    @Html.TextBox("email", null, new { @class = "form-control center-block", placeholder = "Enter Your Email Id", id = "2nd" })
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <h4>Password</h4>
+                                <div>
+                                    @Html.TextBox("pass", null, new { @class = "form-control center-block", placeholder = "Enter Your Password", type = "password", id = "3rd" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <h4>Security Question</h4>
+                                <div>
+                                    @Html.TextBox("que", null, new { @class = "form-control center-block", placeholder = "Enter Your Security Question", id = "4th" })
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <h4>Security Answer</h4>
+                                <div>
+                                    @Html.TextBox("ans", null, new { @class = "form-control center-block", placeholder = "Enter Your Security Answer", id = "5th" })
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div>
+                            <label style="padding-top:10px">Add a DisplayPicture</label>
+                            <input type="file" name="DisplayPic" />
+                        </div>
+
+                        <button id="signup" type="submit" class="btn btn-default form-inline pull-right" style="background-color:rgba(77, 68, 68, 0.84); color:white; margin-top:10px"><span class="glyphicon glyphicon glyphicon-log-in"></span> Register</button>
+                        <label id="errorlable" style="color:rgba(255, 0, 0, 0.81)"></label>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section scripts{
+ <script type="text/javascript">
+     $(document).ready(function () {
+         $("#info").hide();
+     });
+     $("#forgetPass").click(function (event) {
+         event.preventDefault();
+         var loginId = $("#loginID").val();
+         if (loginId.length == 0) {
+             $("#lbl").text("Please your login ID first..!");
+         }
+         else {
+             $("#lbl").hide();
+             $.ajax({
+                 url: "/user/ForgotPassword",
+                 dataType: 'json',
+                 data: { LoginId: loginId }
+             });
+             $("#info").show();
+         }
+
+     });
+
+     
+   
+     $("#Cnlist").change(function () {
+         var countryId = $(this).val();
+         
+         $.ajax({
+             url: "/user/SendProvincesToDropDown/" + countryId
+         }).done(function (p) {
+             $("#DivForProvinces").html(p);
+             $("#PList").change(function () {
+                 var provinceId = $(this).val();
+                 
+                 $.ajax({
+                     url: "/user/SendCitiesToDropDown/" + provinceId
+                 }).done(function (p) {
+                     $("#DivForCities").html(p);
+                     });
+             });
+
+         });
+     });
+     
+
+     $(".form-control").blur(function () {
+         
+         if ($(this).val().length == 0) {
+             $(this).parent().addClass("has-error");
+             $(this).parent().removeClass("has-success");
+         }
+             else {
+                 $(this).parent().addClass("has-success");
+                 $(this).parent().removeClass("has-error");
+             }
+         
+     });
+    
+     $("#signup").click(function (ev) {
+         var f = [$("#1st").val(), $("#2nd").val(), $("#3rd").val(), $("#4th").val(), $("#5th").val(), $("#6th").val(), $("#7th").val(), $("#8th").val(), $("#9th").val(), $("#Cnlist").val()]
+         var x = $("#PList").val();
+         var y = $("#CityList").val();
+         var x = 0;
+         for (var i = 0; i < f.length; i++)
+         {
+             if (f[i].length == 0)
+                 x++;
+         }
+         if (x > 0) {
+             ev.preventDefault();
+             $("#errorlable").text("please enter all feilds");
+         }
+         else
+         {
+             var x = $("#PList").val();
+             if (x.length == 0) {
+                 ev.preventDefault();
+                 $("#errorlable").text("please enter all feilds");
+             }
+             else {
+                 var y = $("#CList").val();
+                 if (y.length == 0) {
+                     ev.preventDefault();
+                     $("#errorlable").text("please enter all feilds");
+                 }
+                 else
+                     $("#errorlable").text("");
+             }
+             
+         }
+     });
+
+
+ </script>
+}
+

@@ -1,0 +1,17 @@
+﻿
+@using GarmentsOnlineShop.Models.DepartmentAndCategories
+@model SubCatModel
+@using (Html.BeginForm("EditSubCat", "DepartmentsAndCategories", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.HiddenFor(m => m.id)
+    <div class="form-group">
+        <div class="input-group">
+            @Html.TextBoxFor(m => m.name, Model.name, new { @class = "form-control" })
+
+            <label>Select picture of Sub Category</label>
+            <input name="pic" type="file" />
+
+            <button type="submit" class="btn pull-right"><span class="glyphicon glyphicon-save">Update</span></button>
+        </div>
+    </div>
+}

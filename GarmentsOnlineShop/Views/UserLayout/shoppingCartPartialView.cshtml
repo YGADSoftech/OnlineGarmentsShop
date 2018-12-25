@@ -1,0 +1,123 @@
+﻿@using GarmentsOnlineShop.Models.cart;
+
+    <div class="container">
+    <table class="table-responsive">
+        <thead style="background-color:rgba(77, 68, 68, 0.84)">
+            <tr>
+                <th class="col-lg-3" style="color:white">Product</th>
+                
+                <th class="col-lg-1" style="color:white">Quantity</th>
+                <th class="col-lg-1" style="color:white">Sub Total</th>
+
+                <th class="col-lg-3" style="color:white">Size</th>
+                <th class="col-lg-3" style="color:white">color</th>
+
+                <th class="col-lg-1" style="color:white">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @{
+                int c = 0;
+                double total = 0.00;
+                if (Session["cart"] != null)
+                {
+                    foreach (Item item in (List<Item>)Session["cart"])
+                    {
+
+                        <tr>
+                            <td class="col-lg-3">
+                                @if (item.Products.Images.Count > 0)
+                                {
+                                    <img src="@Url.Content(item.Products.Images.ToList()[0].Url)" alt="" class="img-responsive" style="width:50px; height:50px" /> <h4 class="text-center"> @item.Products.Name</h4>
+                                }
+                                else
+                                {
+                                    <img src="/images/nophoto.png" alt="" class="img-responsive" style="width:50px; height:50px" /> <h4>@item.Products.Name</h4>
+                                }
+                                
+                            </td>
+                            
+                            <td class="col-lg-1">
+                                <input type="number" class="form-control qnty" data-index="@c" data-price="@item.Products.Price" style="width:50px; height:inherit" value="@item.Quantity" />
+                            </td>
+
+                            <td class="col-lg-1">@(item.Products.Price * item.Quantity)</td>
+                            @*abc*@
+                            <td class="col-lg-3">
+                                <select name="Sizes" class="sz form-control" style="width:70px; height:inherit" data-indx="@c">
+                                    @if (!string.IsNullOrEmpty(item.Size))
+                                    {
+                                        foreach (var s in item.Products.SizesOffered)
+                                        {
+                                            if (s.Name == item.Size)
+                                            {
+                                                <option value=@s.Name>@s.Name</option>
+                                            }
+                                        }
+                                    }
+
+                                    @foreach (var s in item.Products.SizesOffered)
+                                    {
+                                        <option value=@s.Name>@s.Name</option>
+                                    }
+                                </select>
+                            </td>
+                            <td class="col-lg-3">
+                                <select name="colors" class="clr form-control" style="width:60px; height:inherit" data-Indx="@c">
+                                    @if (!string.IsNullOrEmpty(item.Color))
+                                    {
+                                        foreach (var x in item.Products.colors)
+                                        {
+                                            if (x.Name == item.Color)
+                                            {
+                                                <option value=@x.Name>@x.Name</option>
+                                            }
+                                        }
+                                    }
+                                    @foreach (var x in item.Products.colors)
+                                    {
+                                        <option value=@x.Name>@x.Name</option>
+                                    }
+                                </select>
+                            </td>
+                            @*xyz*@
+
+
+                            <td class="col-lg-1">
+                                <a href="#" class="remove" data-pid="@item.Products.Id"><span class="glyphicon glyphicon-remove-sign"></span></a>
+                            </td>
+                        </tr>
+                        c++;
+                        total = total + (item.Products.Price * item.Quantity);
+                    }
+                }
+
+            }
+
+        </tbody>
+
+    </table>
+    <div class="row">
+        <div class="container" style="margin-top:10px">
+            <div class="col-lg-4">
+                <button type="button" id="ContinueShopping" class="form-control btn btn-default">Continue Shopping</button>
+            </div>
+            <div class="col-lg-4">
+                @if (Session["cart"] != null)
+            {
+                    <a href="/UserLayout/VerifyDetail" class="form-control btn btn-default"> PlaceOrder</a>
+                }
+
+            </div>
+            <div class="col-lg-4">
+                <div class="col-lg-6">
+                    <h4>Total:</h4>
+                </div>
+                <div class="col-lg-6" id="total">
+                    <h4>@total</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

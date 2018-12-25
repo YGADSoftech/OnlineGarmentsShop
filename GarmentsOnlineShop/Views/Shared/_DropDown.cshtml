@@ -1,0 +1,4 @@
+﻿@using GarmentsOnlineShop.Models
+@model DropDownModel
+
+@Html.DropDownList(Model.Name, Model.Values, Model.Caption, new {@class = "form-control", id = Model.Id })
